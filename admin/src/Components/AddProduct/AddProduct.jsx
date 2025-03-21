@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './AddProduct.css';
 import upload_area from '../../assets/upload_area.svg';
-import all_products from '../../productAssets/all_product';
+
+import all_products from '../productAssets/all_product';
 
 const AddProduct = () => {
   const [image, setImage] = useState(false);
@@ -55,6 +56,39 @@ const AddProduct = () => {
       });
     }
   };
+  
+  /*const Add_All_Product = async () => {
+    try {
+      for (const product of all_products) {
+        const imageName = product.image.split('/').pop();
+        const newProduct = {
+          name: product.name,
+          image: `http://localhost:4000/images/${imageName}`,
+          // image: `http://localhost:4000/images/${product.image}`,
+          // image: product.image, // Assuming image URLs are correctly referenced
+          category: product.category,
+          new_price: product.new_price,
+          old_price: product.old_price
+        };
+
+        let response = await fetch('http://localhost:4000/addproduct', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newProduct),
+        });
+
+        let data = await response.json();
+        if (!data.success) {
+          console.error(`Failed to add product: ${product.name}`);
+        }
+      }
+      alert("All Products Added Successfully!");
+    } catch (error) {
+      console.error("Error adding products:", error);
+    }
+  };*/
 
  
 
@@ -93,7 +127,7 @@ const AddProduct = () => {
       </div>
 
       <button onClick={() => { Add_Product() }} className='addproduct-btn'>ADD</button>
-      {/* <button onClick={() => { Add_All_Product() }} className='addproduct-btn'>ADD_All_Product</button> */}
+       {/* <button onClick={() => { Add_All_Product() }} className='addproduct-btn'>ADD_All_Product</button>  */}
     </div>
   );
 };

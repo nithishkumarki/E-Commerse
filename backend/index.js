@@ -54,41 +54,62 @@ const Product=mongoose.model("Product",{
 })
 
 //fetch from request and add to mongodb
-app.post('/addproduct',async(req,res)=>{
+// app.post('/addproduct',async(req,res)=>{
 
-    let products=await Product.find({});
+//     let products=await Product.find({});
      
-     let id;
-     if(products.length>0)
-     {
-        let last_product_array=products.slice(-1);//get last product
-        let last_product=last_product_array[0];
-        id=last_product.id+1;
-     }
-     else{
-        id=1;
-     }
+//      let id;
+//      if(products.length>0)
+//      {
+//         let last_product_array=products.slice(-1);//get last product
+//         let last_product=last_product_array[0];
+//         id=last_product.id+1;
+//      }
+//      else{
+//         id=1;
+//      }
 
-    const product=new Product({
-        id:id,
-        name:req.body.name,
-        image:req.body.image,
-        category:req.body.category,
-        new_price:req.body.new_price,
-        old_price:req.body.old_price,
-        // available:req.body.available
-    });
-    console.log(product);
+//     const product=new Product({
+//         id:id,
+//         name:req.body.name,
+//         image:req.body.image,
+//         category:req.body.category,
+//         new_price:req.body.new_price,
+//         old_price:req.body.old_price,
+//         // available:req.body.available
+//     });
+//     console.log(product);
 
-    await product.save();
-    console.log("Saved");
+//     await product.save();
+//     console.log("Saved");
 
-    res.json({
-        success:true,
-        name:req.body.name,
-    })
+//     res.json({
+//         success:true,
+//         name:req.body.name,
+//     })
 
-})
+// })
+app.post('/addproduct', async (req, res) => {
+    try {
+      let products = await Product.find({});
+      let id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
+  
+      const product = new Product({
+        id: id,
+        name: req.body.name,
+        image: req.body.image,
+        category: req.body.category,
+        new_price: req.body.new_price,
+        old_price: req.body.old_price
+      });
+  
+      await product.save();
+      res.json({ success: true, name: req.body.name });
+    } catch (error) {
+      console.error("Error saving product:", error);
+      res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  });
 
 //API for delete
 app.post('/removeproduct',async(req,res)=>{
@@ -112,7 +133,7 @@ app.get('/allproducts',async(req,res)=>{
 
 //Shema creating for user mode
 
-const Users=mongoose.model('Users',{
+const Users=mongoose.model('users',{
     name:{type:String,required:true},
     email:{type:String,unique:true},
     password:{type:String,required:true},
@@ -128,6 +149,7 @@ app.post('/signup',async(req,res)=>
     {
         return res.status(400).json({sucess:false,error:"Email Already Exists"});
     }
+
     let cart={};
     for(let i=0;i<300;i++)
     {
@@ -139,6 +161,7 @@ app.post('/signup',async(req,res)=>
         password:req.body.password,
         cartData:cart
     });
+
     await user.save();
 
     const data={
@@ -148,7 +171,9 @@ app.post('/signup',async(req,res)=>
     }
 
     const token=jwt.sign(data,'secret_ecom');
+    
     res.json({success:true,token})
+
 })
 
 //login API
